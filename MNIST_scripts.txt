@@ -1,0 +1,195 @@
+#Scripts for Data Sets 1 and 2
+
+X <-  as.matrix(read.table("C:/Users/Jackie/Documents/assign4dataset1.txt", header = TRUE))
+y <-  as.matrix(read.table("C:/Users/Jackie/Documents/assign4dataset1.txt", header = TRUE))
+X2 <- as.matrix(read.table("C:/Users/Jackie/Documents/assign4dataset2.txt", header = TRUE))
+y2 <- as.matrix(read.table("C:/Users/Jackie/Documents/assign4dataset2.txt", header = TRUE))
+
+my <- c(5, 1, 5)
+q <- ncol(X)
+
+#Data Set 1
+#Original Trial with eta = 0.001, iterations = 5000
+fita1 <- mlp_train(X,y,my, 0.001, 5000)
+plot(fita1$E, xlab="Number of Iterations", ylab="Average Squared Error", type="l", log="y")
+title("Training Error for Data Set 1")
+
+#With eta = 0.001, iterations = 5000, using diff. random initialization of weights
+fita11 <- mlp_train(X,y,my, 0.001, 5000)
+plot(fita11$E, xlab="Number of Iterations", ylab="Average Squared Error", type="l", log="y")
+title("Training Error for Data Set 1")
+
+
+#Using 2100 iterations, eta = 0.001
+fita2 <- mlp_train(X,y,my, 0.001, 5000)
+plot(fita2$E, xlab="Number of Iterations", ylab="Average Squared Error", type="l", log="y")
+title("Training Error for Data Set 1")
+
+#This is to create the scatterplot
+plot(X, xlab = "x values", ylab= "y values")
+points(fita2$predictions, col=2)
+#Need to connect lines from predictions to actual data
+arrows(X[,1], X[,2], fita2$predictions[,1], fita2$predictions[,2], length = 0, col=2)
+title ("Scatterplot of Training Points and Predictions")
+
+
+#Using 500 iterations, eta = 0.001
+fita3 <- mlp_train(X,y,my, 0.001, 5000)
+plot(fita3$E, xlab="Number of Iterations", ylab="Average Squared Error", type="l", log="y")
+title("Training Error for Data Set 1")
+
+#This is to create the scatterplot
+plot(X, xlab = "x values", ylab= "y values")
+points(fita3$predictions, col=2)
+#Need to connect lines from predictions to actual data
+arrows(X[,1], X[,2], fita3$predictions[,1], fita3$predictions[,2], length = 0, col=2)
+title ("Scatterplot of Training Points and Predictions")
+
+#Using 500 iterations, eta = 0.001 with different random initialization of weights
+fita31 <- mlp_train(X,y,my, 0.001, 5000)
+plot(fita31$E, xlab="Number of Iterations", ylab="Average Squared Error", type="l", log="y")
+title("Training Error for Data Set 1")
+
+#This is to create the scatterplot
+plot(X, xlab = "x values", ylab= "y values")
+points(fita31$predictions, col=2)
+#Need to connect lines from predictions to actual data
+arrows(X[,1], X[,2], fita31$predictions[,1], fita31$predictions[,2], length = 0, col=2)
+title ("Scatterplot of Training Points and Predictions for Data Set 1")
+
+
+#Data Set 2
+
+#Using 5000 iterations, eta = 0.001
+fitb1 <- mlp_train(X2,y2,my, 0.001, 5000)
+plot(fitb1$E, xlab="Number of Iterations", ylab="Average Squared Error", type="l", log="y")
+title("Training Error for Data Set 2")
+#This is to create the scatterplot
+plot(X2, xlab = "x values", ylab= "y values")
+points(fitb1$predictions, col=2)
+#Need to connect lines from predictions to actual data
+arrows(X2[,1], X2[,2], fitb1$predictions[,1], fitb1$predictions[,2], length = 0, col=2)
+title ("Scatterplot of Training Points and Predictions for Data Set 2")
+
+#Using 1300 iterations, eta = 0.001
+fitb2 <- mlp_train(X2,y2,my, 0.001, 1300)
+plot(fitb2$E, xlab="Number of Iterations", ylab="Average Squared Error", type="l", log="y")
+title("Training Error for Data Set 2")
+#This is to create the scatterplot
+plot(X2, xlab = "x values", ylab= "y values")
+points(fitb2$predictions, col=2)
+#Need to connect lines from predictions to actual data
+arrows(X2[,1], X2[,2], fitb2$predictions[,1], fitb2$predictions[,2], length = 0, col=2)
+title ("Scatterplot of Training Points and Predictions for Data Set 2")
+
+#Using 2600 iterations, eta = 0.0005
+fitb3 <- mlp_train(X2,y2,my, 0.0005, 2600)
+plot(fitb3$E, xlab="Number of Iterations", ylab="Average Squared Error", type="l", log="y")
+title("Training Error for Data Set 2")
+#This is to create the scatterplot
+plot(X2, xlab = "x values", ylab= "y values")
+points(fitb3$predictions, col=2)
+#Need to connect lines from predictions to actual data
+arrows(X2[,1], X2[,2], fitb3$predictions[,1], fitb3$predictions[,2], length = 0, col=2)
+title ("Scatterplot of Training Points and Predictions for Data Set 2")
+
+
+#Using 300 iterations, eta = 0.001
+set.seed(2)
+fitb4 <- mlp_train(X2,y2,my, 0.001, 300)
+plot(fitb4$E, xlab="Number of Iterations", ylab="Average Squared Error", type="l", log="y")
+title("Training Error for Data Set 2")
+#This is to create the scatterplot
+plot(X2, xlab = "x values", ylab= "y values")
+points(fitb4$predictions, col=2)
+#Need to connect lines from predictions to actual data
+arrows(X2[,1], X2[,2], fitb4$predictions[,1], fitb4$predictions[,2], length = 0, col=2)
+title ("Scatterplot of Training Points and Predictions for Data Set 2")
+
+
+#With different random initialization: Using 300 iterations, eta = 0.001
+set.seed(8)
+fitb41 <- mlp_train(X2,y2,my, 0.001, 300)
+plot(fitb41$E, xlab="Number of Iterations", ylab="Average Squared Error", type="l", log="y")
+title("Training Error for Data Set 2")
+#This is to create the scatterplot
+plot(X2, xlab = "x values", ylab= "y values")
+points(fitb41$predictions, col=2)
+#Need to connect lines from predictions to actual data
+arrows(X2[,1], X2[,2], fitb41$predictions[,1], fitb41$predictions[,2], length = 0, col=2)
+title ("Scatterplot of Training Points and Predictions for Data Set 2")
+
+
+
+DataSet #3- Scripts
+
+#Read in the data for DataSet #3
+X3 <-  as.matrix(read.table("C:/Users/Jackie/Documents/assign4dataset3.txt", header = TRUE))
+y3 <-  as.matrix(read.table("C:/Users/Jackie/Documents/assign4dataset3.txt", header = TRUE))
+Z1 <-  as.matrix(read.table("C:/Users/Jackie/Documents/assign4dataset3s.txt", header = TRUE))
+
+#Set the number of hidden units for each layer
+m <- c(10, 2, 10)
+q<- ncol(y3)
+
+#Show the image of the digit
+show_digit <- function (im)
+{
+  image (1:14, 1:14, t(apply (matrix(im,14,14,byrow=TRUE), 2, rev)),
+         col=gray(seq(0,1,length=100)),
+         zlim=c(0,1))
+}
+show_digit(X3[1,])
+
+#Training the Models- Includes Plots of Average Squared Error and Bottleneck Units
+#Original Trial- 1500 iterations, eta = 0.001
+set.seed(2)
+fit <- mlp_train(X3,y3,m, 0.001, 1500)
+plot(fit$hidden2, xlab = "Bottleneck Unit 1", ylab= "Bottleneck Unit 2", pch = as.character(Z1))
+title ("Scatterplot of Hidden Unit Values for each Training Case")
+plot(fit$E, xlab="Number of Iterations", ylab="Average Squared Error", type="l", log="y")
+title("Training Error for Data Set 3")
+
+#Look at early stopping: try with 750 iterations
+set.seed(2)
+fit1 <- mlp_train(X3,y3,m, 0.001, 750)
+plot(fit1$hidden2, xlab = "Bottleneck Unit 1", ylab= "Bottleneck Unit 2", pch = as.character(Z1))
+title ("Scatterplot of Hidden Unit Values for each Training Case")
+plot(fit1$E, xlab="Number of Iterations", ylab="Average Squared Error", type="l", log="y")
+title("Training Error for Data Set 3")
+
+#Choose a smaller eta value = 0.0005, iterations = 2250
+set.seed(2)
+fit2 <- mlp_train(X3,y3,m, 0.0005, 2250)
+plot(fit2$hidden2, xlab = "Bottleneck Unit 1", ylab= "Bottleneck Unit 2", pch = as.character(Z1))
+title ("Scatterplot of Hidden Unit Values for each Training Case")
+plot(fit2$E, xlab="Number of Iterations", ylab="Average Squared Error", type="l", log="y")
+title("Training Error for Data Set 3")
+
+#Choose an even smaller eta value = 0.0001, eta = 15000
+set.seed(2)
+fit3 <- mlp_train(X3,y3,m, 0.00001, 15000)
+plot(fit3$hidden2, xlab = "Bottleneck Unit 1", ylab= "Bottleneck Unit 2", pch = as.character(Z1))
+title ("Scatterplot of Hidden Unit Values for each Training Case")
+plot(fit3$E, xlab="Number of Iterations", ylab="Average Squared Error", type="l", log="y")
+title("Training Error for Data Set 3")
+
+#Try with less iterations given the decreased eta value
+set.seed(2)
+fit4 <- mlp_train(X3,y3,m, 0.00001, 5000)
+plot(fit4$hidden2, xlab = "Bottleneck Unit 1", ylab= "Bottleneck Unit 2", pch = as.character(Z1))
+title ("Scatterplot of Hidden Unit Values for each Training Case")
+plot(fit4$E, xlab="Number of Iterations", ylab="Average Squared Error", type="l", log="y")
+title("Training Error for Data Set 3")
+plot(rowSums(abs(fit4$W)), xlab = "Number of Iterations", ylab = "Sum of Absolute Values of Weights",  type="l")
+title("Sum of Absolute Values of weights")
+
+#Try with less iterations given the decreased eta value
+set.seed(2)
+fit5 <- mlp_train(X3,y3,m, 0.00001, 800)
+plot(fit5$hidden2, xlab = "Bottleneck Unit 1", ylab= "Bottleneck Unit 2", pch = as.character(Z1))
+title ("Scatterplot of Hidden Unit Values for each Training Case")
+plot(fit5$E, xlab="Number of Iterations", ylab="Average Squared Error", type="l", log="y")
+title("Training Error for Data Set 3")
+plot(rowSums(abs(fit5$W)), xlab = "Number of Iterations", ylab = "Sum of Absolute Values of Weights",  type="l")
+title("Sum of Absolute Values of weights")

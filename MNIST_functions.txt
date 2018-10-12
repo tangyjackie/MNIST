@@ -1,0 +1,114 @@
+# SKELETON FOR LIST OF NETWORK PARAMETERS.  Returns a skeleton suitable for
+# use with "relist" for converting a vector of parameters for a network with
+# p inputs and m hidden units to a list.
+
+mlp_skeleton <- function(p, m, q)
+{
+list (w1 = matrix(0, p, m[1]), w1_0 = rep(0,m[1]), w2 = matrix(0, m[1], m[2]), w2_0 = rep(0, m[2]), 
+ w3 = matrix(0, m[2],m[3]), w3_0 = rep(0, m[3]), w4= matrix(0, m[3], q), w4_0 = rep(0, q))
+}
+
+#Forward Network Computation
+#Calculates the hidden unit inputs for all training cases
+mlp_forward <- function(X, wl)
+
+{
+		n <- nrow(X)
+		P <- ncol(X)
+		
+		c1 <- matrix(wl$w1_0, n, length(wl$w1_0), byrow = TRUE) + X%*%wl$w1
+		h1 <- tanh(c1)
+		
+		h2 <- matrix(wl$w2_0, n, length(wl$w2_0), byrow=TRUE) + h1%*%wl$w2 
+		
+		c3 <- matrix(wl$w3_0, n, length(wl$w3_0), byrow=TRUE) +  h2%*%wl$w3 
+		h3 <- tanh(c3)
+		
+		f <- matrix(wl$w4_0, n, length(wl$w4_0), byrow=TRUE) + h3%*%wl$w4 
+
+list (h1=h1, c1=c1, h2=h2, h3=h3, c3=c3, f=f)
+}
+
+#Construct the Gradient without backward network computation
+#The gradient constructed here already incorporates the backward network computations.
+#This was because it was too complicated structurally to loop through all the indices.
+#It was simpler to sum up all the partial derivatives with respect to each weight component directly
+
+mlp_gradient <- function(X, y, wl, fw)
+{
+
+n <- nrow(X)
+p <- ncol(X)
+m1 <- ncol(wl$w1)
+m2 <- ncol(wl$w2)
+m3 <- ncol(wl$w3)
+q <- ncol(wl$w4)
+
+#It needs to return a matrix that contains the network parameters which are vectors
+gr <- relist(rep(0, length(unlist(wl))), wl)
+
+for(i in 1:n) {	
+
+	H3 <- matrix(1-(fw$h3[i,])^2, m2, m3, byrow=TRUE)
+	de_df <- matrix(fw$f[i,] - y[i,], m3, q, byrow=TRUE)
+
+	gr$w4 <- gr$w4 + (fw$h3[i,]%*%t(fw$f[i,] - y[i,]))
+	gr$w4_0 <- gr$w4_0 + fw$f[i,] - y[i,]
+	gr$w2 <- gr$w2 + (fw$h1[i,]%*%t(c((H3*wl$w3)%*%(de_df*wl$w4)%*%rep(1,q))))
+	gr$w2_0 <- gr$w2_0 + c((H3*wl$w3)%*%(de_df*wl$w4)%*%rep(1,q))
+	gr$w1 <- gr$w1 + (X[i,]%*%t((1 - (fw$h1[i,])^2)*c(wl$w2%*%(H3*wl$w3)%*%(de_df*wl$w4)%*%rep(1,q))))
+	gr$w1_0 <- gr$w1_0 + ((1 - (fw$h1[i,])^2)*c(wl$w2%*%(H3*wl$w3)%*%(de_df*wl$w4)%*%rep(1,q)))
+	
+#Since t(H3) does not conform with de_df, we need to change dimensions on H3
+H3 <- matrix(1-(fw$h3[i,])^2, q, m3, byrow=TRUE)
+
+gr$w3 <- gr$w3 + (fw$h2[i,]%*%t(c((t(H3)*de_df*wl$w4)%*%rep(1,q))))
+gr$w3_0 <- gr$w3_0 +  c((t(H3)*de_df*wl$w4)%*%rep(1,q))
+
+#We can also divide each of these by sigma (the standard deviation)
+#However, we can ignore it and treat it as a constant to be divided away
+
+}
+gr
+}
+
+
+#Fit MLP network using simple gradient descent
+mlp_train <- function(X, y, m, eta, iters)
+{
+	n <- nrow(X)
+	p <- ncol(X)
+	q <- ncol(y)
+	
+	skel <- mlp_skeleton(p, m, q)
+	
+	E <- rep(NA, iters)
+	W <- matrix(NA, iters, length(unlist(skel)))
+	#This is to set up the random initialization of the weights
+	w <- c(rnorm(length(unlist(skel))-q, 0, 0.1), apply(y, 2, mean))
+	wl <- relist(w, skel)
+	
+	fw <- mlp_forward(X, wl)
+	
+	for (iter in 1:iters)
+	{
+		
+		grad <- mlp_gradient(X, y , wl, fw)
+		w <- w - eta*unlist(grad)
+		wl <- relist(w,skel)
+		W[iter,] <- w
+		
+		fw <- mlp_forward(X, wl)
+		E[iter] <- mean((fw$f-y)^2)
+		#This is so I can graph the predictions for Data Sets 1 and 2
+		predictions <- fw$f
+		#This is so I can graph the second hidden layer with 2 bottleneck units
+		hidden2 <- fw$h2
+	}
+	list (E=E, W=W, predictions=predictions, hidden2=hidden2)
+	}
+		
+		
+		
+		
+		
